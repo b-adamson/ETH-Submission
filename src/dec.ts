@@ -100,7 +100,5 @@ async function fetchMetadata() {
   }
 }
 
-
-
 // Run the function
 fetchMetadata();

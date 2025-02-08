@@ -4,7 +4,7 @@ import sys
 from analytics import *
 from financial import *
 
-mint_address = "mntvxashzV2s3m719t884KAsTeqRaKxjT4Y8LPHxAHg"
+mint_address = "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN"
 
 # run TS metadata extractor and parser and grab token symbol
 def getTokenSymbol(mint_address):
@@ -16,6 +16,7 @@ def getTokenSymbol(mint_address):
     except subprocess.CalledProcessError as e:
         print("An error occurred while running the TypeScript file:")
         print(e.stderr)
+    print(symbol)
 
     return symbol
 
@@ -32,7 +33,7 @@ def generateCSV(google_trends_data, crypto_price_data):
         combined_data.to_csv('combined_data.csv', header=False)
         print("Combined data has been saved to combined_data.csv")
     else:
-        print("One or both datasets are empty, skipping CSV export.")
+        raise Exception("One or both datasets are empty, skipping CSV export.")
 
 
 def main():
