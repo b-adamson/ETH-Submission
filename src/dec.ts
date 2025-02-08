@@ -12,22 +12,6 @@ const seeds = [Buffer.from("metadata"), programId.toBytes(), tokenMint.toBytes()
 const [metadataPDA, bump] = PublicKey.findProgramAddressSync(seeds, programId);
 const connection = new Connection("https://api.mainnet-beta.solana.com");
 
-function copyDefaultIcon() {
-  const defaultIconPath = path.join(__dirname, 'src/data/defaulticon.jpg');
-  const targetPath = path.join(__dirname, 'src/data/icon.jpg');
-
-  try {
-    if (fs.existsSync(defaultIconPath)) {
-      fs.copyFileSync(defaultIconPath, targetPath);
-      console.error("Default icon copied as icon.jpg.");
-    } else {
-      console.error("Default icon not found.");
-    }
-  } catch (error) {
-    console.error("Error copying default icon:", error);
-  }
-}
-
 async function fetchMetadata() {
   try {
     const accountInfo = await connection.getAccountInfo(metadataPDA);
@@ -52,8 +36,7 @@ async function fetchMetadata() {
     let twitter = null;
     let imageUrl = null;
 
-    // Log only the symbol to stdout
-    console.log(symbol);
+    console.log(symbol); // Log symbol
 
     if (uri) {
       try {
@@ -66,27 +49,16 @@ async function fetchMetadata() {
         twitter = metadataJson.twitter || null;
         imageUrl = metadataJson.image || null;
 
-        // Download image if found
         if (imageUrl) {
-          const imageResponse = await fetch(imageUrl);
-          if (!imageResponse.ok) {
-            copyDefaultIcon()
-          }
-
-          const imageBuffer = await imageResponse.buffer();
-          if (!fs.existsSync('src/data')) {
-            fs.mkdirSync('src/data', { recursive: true });
-          }
-          fs.writeFileSync('src/data/icon.jpg', imageBuffer);
+          await downloadImage(imageUrl);
         } else {
-          copyDefaultIcon()
+          await downloadImage("https://dhw7e56xnudlkirsdiylutupx6x2e67l5pejkbjxu65f5mjoqi7q.arweave.net/Ge3yd9dtBrUiMhowuk6Pv6-ie-vryJUFN6e6XrEugj8?ext=png");
         }
       } catch (error) {
-        copyDefaultIcon()
+        await downloadImage("https://dhw7e56xnudlkirsdiylutupx6x2e67l5pejkbjxu65f5mjoqi7q.arweave.net/Ge3yd9dtBrUiMhowuk6Pv6-ie-vryJUFN6e6XrEugj8?ext=png");
       }
     }
 
-    // Create and write metadata object to JSON file
     const metadataObject = {
       name: name || null,
       symbol: symbol || null,
@@ -97,6 +69,23 @@ async function fetchMetadata() {
 
   } catch (error) {
     console.error("Error fetching account information or processing metadata:", error);
+  }
+}
+
+async function downloadImage(url) {
+  try {
+    const imageResponse = await fetch(url);
+    if (!imageResponse.ok) {
+      throw new Error("Failed to fetch image.");
+    }
+
+    const imageBuffer = await imageResponse.buffer();
+    if (!fs.existsSync('src/data')) {
+      fs.mkdirSync('src/data', { recursive: true });
+    }
+    fs.writeFileSync('src/data/icon.jpg', imageBuffer);
+  } catch (error) {
+    console.error("Error downloading image:", error);
   }
 }
 

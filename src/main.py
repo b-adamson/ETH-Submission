@@ -4,7 +4,7 @@ import sys
 from analytics import *
 from financial import *
 
-mint_address = "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN"
+mint_address = "BvSyXBvy76mUgzLSbvvT4NQw5rSM4P5zAsdnvqUJpump"
 
 # run TS metadata extractor and parser and grab token symbol
 def getTokenSymbol(mint_address):
@@ -21,19 +21,20 @@ def getTokenSymbol(mint_address):
     return symbol
 
 def generateCSV(google_trends_data, crypto_price_data):
-    if not google_trends_data.empty and crypto_price_data is not None:
-        combined_data = pd.merge(
-            google_trends_data, 
-            crypto_price_data, 
-            left_index=True, 
-            right_index=True,
-            how='inner'
-        )
-        # Save the combined data to a CSV file
-        combined_data.to_csv('combined_data.csv', header=False)
-        print("Combined data has been saved to combined_data.csv")
-    else:
-        raise Exception("One or both datasets are empty, skipping CSV export.")
+    # if not google_trends_data.empty and crypto_price_data is not None:
+    combined_data = pd.merge(
+        google_trends_data, 
+        crypto_price_data, 
+        left_index=True, 
+        right_index=True,
+        how='inner'
+    )
+    # Save the combined data to a CSV file
+    # combined_data.to_csv('combined_data.csv', header=False)
+    combined_data.to_csv("1.csv", header=False)
+    print("Combined data has been saved to combined_data.csv")
+    # else:
+    #     raise Exception("One or both datasets are empty, skipping CSV export.")
 
 
 def main():
@@ -42,7 +43,7 @@ def main():
         raise Exception("Coin not found")
     google_trends_data = get_analytics(symbol)
     geckoID = get_coin_id_from_mint(mint_address)
-    crypto_price_data = fetch_crypto_data(geckoID, days=60)
+    crypto_price_data = fetch_crypto_data(geckoID, days=365)
     generateCSV(google_trends_data, crypto_price_data)
 
 
