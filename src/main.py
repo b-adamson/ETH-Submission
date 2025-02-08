@@ -4,7 +4,7 @@ import sys
 from analytics import *
 from financial import *
 
-mint_address = "BvSyXBvy76mUgzLSbvvT4NQw5rSM4P5zAsdnvqUJpump"
+mint_address = "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN"
 
 # run TS metadata extractor and parser and grab token symbol
 def getTokenSymbol(mint_address):

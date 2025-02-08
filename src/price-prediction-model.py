@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import classification_report, accuracy_score
 
 # List of CSV files
@@ -20,14 +20,15 @@ for file in csv_files:
     # Replace 0 in SearchQueries with 1 to avoid division by zero
     df['SearchQueries'] = df['SearchQueries'].replace(0, 1)
 
-    # Create percentage change features
+    # Create features: percentage change, rolling averages, and volatility
     df['PriceChange'] = df['Price'].pct_change().fillna(1e-6)
     df['SearchQueryChange'] = df['SearchQueries'].pct_change().fillna(1e-6)
+    df['RollingMinPrice'] = df['Price'].rolling(window=3).min().shift(-3)
+    df['Volatility'] = df['Price'].rolling(window=5).std().fillna(0)
 
     # Create labels: 1 if price drops more than 10% in the next 3 days, otherwise 0
-    df['FuturePriceChange'] = df['Price'].pct_change(periods=3).shift(-3)
-    df['CrashLabel'] = (df['FuturePriceChange'] < -0.10).astype(int)
-
+    df['CrashLabel'] = (df['RollingMinPrice'] < df['Price'] * 0.9).astype(int)
+    
     # Fill remaining NaN or infinite values
     df.replace([np.inf, -np.inf], 1e-6, inplace=True)
 
@@ -35,14 +36,17 @@ for file in csv_files:
     all_data = pd.concat([all_data, df], ignore_index=True)
 
 # Prepare features and labels
-X = all_data[['PriceChange', 'SearchQueryChange']].values
+X = all_data[['PriceChange', 'SearchQueryChange', 'Volatility']].values
 y = all_data['CrashLabel'].values
 
 # Split the data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train a Random Forest Classifier
+# Train a Random Forest Classifier with cross-validation
 clf = RandomForestClassifier(random_state=42)
+scores = cross_val_score(clf, X_train, y_train, cv=5, scoring='accuracy')
+print(f"Cross-Validation Accuracy: {scores.mean():.2f}")
+
 clf.fit(X_train, y_train)
 
 # Make predictions and evaluate
@@ -61,12 +65,13 @@ def predict_crash(new_file):
     new_df['SearchQueries'] = new_df['SearchQueries'].replace(0, 1)
     new_df['PriceChange'] = new_df['Price'].pct_change().fillna(1e-6)
     new_df['SearchQueryChange'] = new_df['SearchQueries'].pct_change().fillna(1e-6)
+    new_df['Volatility'] = new_df['Price'].rolling(window=5).std().fillna(0)
 
     # Prepare the feature matrix
-    X_new = new_df[['PriceChange', 'SearchQueryChange']].values
+    X_new = new_df[['PriceChange', 'SearchQueryChange', 'Volatility']].values
 
     # Get crash probability for each row
-    probabilities = clf.predict_proba(X_new)[:, 1]  # Probability of class 1 (Crash)
+    probabilities = clf.predict_proba(X_new)[:, 1]
 
     # Return the probability for the latest row (present time)
     crash_probability = probabilities[-1]
@@ -74,5 +79,5 @@ def predict_crash(new_file):
     return crash_probability
 
 # Example usage:
-result = predict_crash('combined_data.csv')
-print(result)
+result = predict_crash('training_data/USDT.csv')
+print(f"Crash Probability: {result:.2f}")
