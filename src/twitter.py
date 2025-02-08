@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 pytrends = TrendReq(hl='en-US', tz=360)
 
-with open('metadata.json', 'r') as file:
+with open('data/metadata.json', 'r') as file:
     metadata = json.load(file) 
 
 keyword = metadata.get("symbol", "DefaultSymbol")
