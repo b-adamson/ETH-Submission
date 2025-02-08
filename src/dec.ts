@@ -1,9 +1,11 @@
 import { PublicKey, Connection } from "@solana/web3.js";
 import * as borsh from "@project-serum/borsh";
-import fetch from "node-fetch";  // Ensure you install node-fetch (npm install node-fetch)
-import * as fs from "fs";  // For saving the image locally
+import fetch from "node-fetch";  
+import * as fs from "fs";  
 
-const tokenMint = new PublicKey("7NfRbZBV9U5jfoqqGjDyJrJqsfiPCAJDL3Yf2xMsN1sg");
+const jsonString = process.argv[2];
+
+const tokenMint = new PublicKey(jsonString);
 const programId = new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s");
 const seeds = [Buffer.from("metadata"), programId.toBytes(), tokenMint.toBytes()];
 
@@ -20,6 +22,7 @@ const borshMetadataLayout = borsh.struct([
   borsh.str('uri'),
 ]);
 
+
 ////////// npx esrun dec.ts
 
 if (accountInfo) {
@@ -28,7 +31,7 @@ if (accountInfo) {
   const symbol = metadata.symbol.replace(/\x00+$/, '');
   const uri = metadata.uri.replace(/\x00+$/, '');
 
-  console.log(name);
+  // console.log(name);
   console.log(symbol);
   // console.log(uri);
 
@@ -41,7 +44,7 @@ if (accountInfo) {
       }
 
       // // find twitter
-      // const metadataJson = await response.json();
+      const metadataJson = await response.json();
       // console.log(metadataJson.twitter);
       // if (metadataJson.twitter) {
       //   console.log(metadata.twitter)
@@ -61,22 +64,22 @@ if (accountInfo) {
 
         // extract image
         const imageBuffer = await imageResponse.buffer();
-        fs.writeFileSync(`data/icon.jpg`, imageBuffer);
+        fs.writeFileSync(`src/data/icon.jpg`, imageBuffer);
       } else {
-        console.log("image not found in the metadata.");
+        console.error("image not found in the metadata.");
       }
     } catch (error) {
       console.error("Error fetching or processing metadata:", error);
     }
     
   }
-  const metadataObject = {
-    name: name || null,
-    symbol: symbol || null,
-  };
+  // const metadataObject = {
+  //   name: name || null,
+  //   symbol: symbol || null,
+  // };
 
   // Step 2: Write the object to a JSON file
-  fs.writeFileSync('data/metadata.json', JSON.stringify(metadataObject, null, 2));
-  console.log("Metadata has been written to metadata.json");
+  // fs.writeFileSync('data/metadata.json', JSON.stringify(metadataObject, null, 2));
+  // console.log("Metadata has been written to metadata.json");
 }
  
