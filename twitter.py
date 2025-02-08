@@ -13,9 +13,9 @@ def get_metadata_account(mint_address: str) -> Pubkey:
     """Derives the metadata account address from the mint address using a Program Derived Address (PDA)."""
     mint_pubkey = Pubkey.from_string(mint_address)
     metadata_seed = [
-        b"metadata",  # Seed prefix for Metaplex metadata
-        METADATA_PROGRAM_ID.as_bytes(),  # Correct method to get bytes from Pubkey
-        mint_pubkey.as_bytes()  # Correct method for mint_pubkey as well
+        b"metadata",               # Seed prefix for Metaplex metadata
+        bytes(METADATA_PROGRAM_ID),  # Convert Pubkey to bytes using bytes()
+        bytes(mint_pubkey)           # Convert mint Pubkey to bytes using bytes()
     ]
     metadata_pubkey, _ = Pubkey.find_program_address(metadata_seed, METADATA_PROGRAM_ID)
     return metadata_pubkey
@@ -28,14 +28,15 @@ def fetch_metadata(mint_address: str):
 
         # Fetch account information for the metadata account
         response = client.get_account_info(metadata_account)
-        account_info = response.get('result', {}).get('value', {})
-
-        if not account_info:
+        
+        # Check if the account exists
+        account_info = response.value
+        if account_info is None:
             print(f"No metadata found for mint address: {mint_address}")
             return None
 
         # Decode the data (it's base58-encoded)
-        data = base58.b58decode(account_info['data'][0])
+        data = base58.b58decode(account_info.data[0])
 
         # The URI is typically stored starting at byte 115 (Metaplex Metadata format)
         uri_offset = 115
@@ -58,7 +59,7 @@ def fetch_metadata(mint_address: str):
 # Example usage
 if __name__ == "__main__":
     # Replace with a valid Solana token mint address
-    mint_address = "mntYaUoFdkQSrAYBQGngaBYiy2brkF2XwV1YoTPiv6Z"  # Ensure this is a valid Solana mint address
+    mint_address = "mntYaUoFdkQSrAYBQGngaBYiy2brkF2XwV1YoTPiv6Z"
     metadata = fetch_metadata(mint_address)
     
     if metadata:
