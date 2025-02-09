@@ -1,8 +1,0 @@
-[
-    {
-        "name": "Coin not found",
-        "symbol": "none",
-        "image": "src/data/icon.jpg",
-        "trustScore": 0
-    }
-]

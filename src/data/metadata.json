@@ -1,8 +1,9 @@
 [
-    {
-        "name": "Coin not found",
-        "symbol": "none",
-        "image": "data/logo.png",
-        "trustScore": 0
-    }
+     {
+          "name": "Wrapped SOL",
+          "symbol": "SOL",
+          "image": "data/default.png",
+          "twitter": null,
+          "trustScore": 60
+     }
 ]

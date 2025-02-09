@@ -4,9 +4,6 @@ import sys
 from analytics import *
 from financial import *
 from price_model import *
-import time
-
-# mint_address = "FUAfBo2jgks6gB4Z4LfZkqSZgzNucisEHqnNebaRxM1P"
 
 # run TS metadata extractor and parser and grab token symbol
 def getTokenSymbol(mint_address):
@@ -33,7 +30,6 @@ def generateCSV(google_trends_data, crypto_price_data):
         )
 
         combined_data.to_csv("src/data/coin.csv", header=False)
-        # print("Combined data has been saved to combined_data.csv")
     else:
         raise Exception("One or both datasets are empty, skipping CSV export.")
 
@@ -69,9 +65,6 @@ def main():
 
     os._exit(0)
 
-# print("Exiting...")
-# exit()
-
 if __name__ == "__main__":
     try:
         main()
@@ -79,17 +72,17 @@ if __name__ == "__main__":
         error_data = {
             "name": str(e),
             "symbol": "none",
-            "image": "data/logo.png",
+            "image": "data/default.png",
             "trustScore": 0
         }
         file_path = os.path.join("src", "data", "metadata.json")
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)  # Create directory if it doesn't exist
+        os.makedirs(os.path.dirname(file_path), exist_ok=True) 
         
         with open(file_path, "w") as error_file:
             json.dump([error_data], error_file, indent=4)
         
         print(f"Error logged to {file_path}")
-        time.sleep(1)
+        os._exit(0)
         
 
 

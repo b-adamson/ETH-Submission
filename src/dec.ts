@@ -2,17 +2,17 @@ import { PublicKey, Connection } from "@solana/web3.js";
 import * as borsh from "@project-serum/borsh";
 import fetch from "node-fetch";  
 import * as fs from "fs";  
-import path from "path"; 
-
-// if (fs.existsSync('src/data/metadata.json')) {fs.unlinkSync('src/data/metadata.json');}
 
 const jsonString = process.argv[2];
 let tokenMint;
+let imagedir = "data/default.png";
+
 try {
   tokenMint = new PublicKey(jsonString);
 } catch (error) {
-  throw new Error("invalid key"); // empty address
+  throw new Error("invalid key");
 }
+
 const programId = new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s");
 const seeds = [Buffer.from("metadata"), programId.toBytes(), tokenMint.toBytes()];
 
@@ -57,19 +57,18 @@ async function fetchMetadata() {
         imageUrl = metadataJson.image || null;
 
         if (imageUrl) {
+          imagedir = "data/logo.png"
           await downloadImage(imageUrl);
-        } else {
-          await downloadImage("https://dhw7e56xnudlkirsdiylutupx6x2e67l5pejkbjxu65f5mjoqi7q.arweave.net/Ge3yd9dtBrUiMhowuk6Pv6-ie-vryJUFN6e6XrEugj8?ext=png");
         }
       } catch (error) {
-        await downloadImage("https://dhw7e56xnudlkirsdiylutupx6x2e67l5pejkbjxu65f5mjoqi7q.arweave.net/Ge3yd9dtBrUiMhowuk6Pv6-ie-vryJUFN6e6XrEugj8?ext=png");
+
       }
     }
 
     const metadataObject = {
       name: name || null,
       symbol: symbol || null,
-      image: "data/logo.png",
+      image: imagedir,
       twitter: twitter
     };
 
@@ -88,16 +87,12 @@ async function downloadImage(url) {
     if (!imageResponse.ok) {
       throw new Error("Failed to fetch image.");
     }
-
+    console.log(2);
     const imageBuffer = await imageResponse.buffer();
-    if (!fs.existsSync('src/data')) {
-      fs.mkdirSync('src/data', { recursive: true });
-    }
     fs.writeFileSync('frontend/data/logo.png', imageBuffer);
   } catch (error) {
     console.error("Error downloading image:", error);
   }
 }
 
-// Run the function
 fetchMetadata();
