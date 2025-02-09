@@ -4,7 +4,7 @@ import sys
 from analytics import *
 from financial import *
 from price_model import *
-
+# by Billy Adamson
 # run TS metadata extractor and parser and grab token symbol
 def getTokenSymbol(mint_address):
     symbol = None

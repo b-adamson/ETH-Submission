@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-
+# by Billy Adamson
 def plot_queries_and_price(csv_file):
 
     # plots a graph of current csv

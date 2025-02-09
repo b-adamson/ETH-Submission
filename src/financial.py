@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-
+# by Arthav Gupta
 def fetch_crypto_data(crypto_id, vs_currency='usd', days=30):
     """
     Fetch historical data for a specific cryptocurrency from the CoinGecko API.
@@ -51,7 +51,7 @@ def fetch_sol_token_price(mint_address, days=30):
     url = f"https://quote-api.jup.ag/v1/price?id={mint_address}"
     prices = []
 
-    # Simulate historical data by querying every 6 hours for the past 'days' days
+    # Simulate historical data 
     for i in range(days * 4):  # 4 samples per day
         response = requests.get(url)
         if response.status_code == 200:

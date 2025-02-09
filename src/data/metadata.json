@@ -1,9 +1,9 @@
 [
      {
-          "name": "Wrapped SOL",
-          "symbol": "SOL",
-          "image": "data/default.png",
+          "name": "Melania Meme",
+          "symbol": "MELANIA",
+          "image": "data/logo.png",
           "twitter": null,
-          "trustScore": 60
+          "trustScore": 15
      }
 ]

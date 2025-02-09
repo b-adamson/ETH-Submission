@@ -2,7 +2,8 @@ import { PublicKey, Connection } from "@solana/web3.js";
 import * as borsh from "@project-serum/borsh";
 import fetch from "node-fetch";  
 import * as fs from "fs";  
-
+// by Billy Adamson
+// decodes metadata from mint address using borsh
 const jsonString = process.argv[2];
 let tokenMint;
 let imagedir = "data/default.png";

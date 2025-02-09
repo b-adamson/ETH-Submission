@@ -2,7 +2,7 @@ import json
 from pytrends.request import TrendReq
 import pandas as pd
 import matplotlib.pyplot as plt
-
+# by Billy Adamson
 pytrends = TrendReq(hl='en-US', tz=360)
 pd.set_option('future.no_silent_downcasting', True)
 
