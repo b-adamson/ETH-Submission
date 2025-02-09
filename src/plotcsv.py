@@ -31,4 +31,4 @@ def plot_queries_and_price(csv_file):
     # Show the plot
     plt.show()
 
-plot_queries_and_price("training_data/@DOGE.csv")
+plot_queries_and_price("combined_data.csv")

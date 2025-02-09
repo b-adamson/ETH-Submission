@@ -19,7 +19,9 @@
   "dependencies": {
     "@project-serum/borsh": "^0.2.5",
     "@solana/web3.js": "^1.98.0",
+    "cors": "^2.8.5",
     "esrun": "^3.2.26",
+    "express": "^4.21.2",
     "node-fetch": "^3.3.2",
     "twitter-api-v2": "^1.19.1",
     "typescript": "^5.7.3"

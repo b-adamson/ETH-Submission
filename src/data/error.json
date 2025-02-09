@@ -1,3 +1,8 @@
-{
-    "error": "The request failed: Google returned a response with code 429"
-}
+[
+    {
+        "name": "Coin not found",
+        "symbol": "none",
+        "image": "src/data/icon.jpg",
+        "trustScore": 0
+    }
+]

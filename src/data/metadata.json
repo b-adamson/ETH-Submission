@@ -1,5 +1,8 @@
-{
-  "name": "OFFICIAL TRUMP",
-  "symbol": "TRUMP",
-  "twitter": null
-}
+[
+    {
+        "name": "Coin not found",
+        "symbol": "none",
+        "image": "data/logo.png",
+        "trustScore": 0
+    }
+]

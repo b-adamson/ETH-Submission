@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import json
+import math
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import classification_report, accuracy_score
@@ -74,10 +76,23 @@ def predict_crash(new_file):
     probabilities = clf.predict_proba(X_new)[:, 1]
 
     # Return the probability for the latest row (present time)
-    crash_probability = probabilities[-1]
+    crash_probability = int(math.ceil(probabilities[-1] * 100))
     
     return crash_probability
 
-# Example usage:
-result = predict_crash('training_data/USDT.csv')
-print(f"Crash Probability: {result:.2f}")
+# # Example usage:
+# result = predict_crash('training_data/USDT.csv')
+# print(f"Crash Probability: {result:.2f}")
+
+# # Step 1: Open and read the existing JSON file
+# with open('src/data/metadata.json', 'r') as file:
+#     data = json.load(file)
+
+# # Step 2: Add a new key-value pair
+# data['score'] = result  # New key-value pair
+
+# # Step 3: Write the updated dictionary back to the JSON file
+# with open('src/data/metadata.json', 'w') as file:
+#     json.dump(data, file, indent=4)  # Pretty formatting with indent=4
+
+# print("Key-value pair added successfully!")

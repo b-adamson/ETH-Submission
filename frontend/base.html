@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coin Authenticity Checker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1><span class="border-text">Coin Authenticity Estimator</span></h1>
+  </header>
+
+  <!-- <section>
+    <h2>Type in coin ticker</h2>
+    <form action="search-results.html" method="get">
+      <input type="text" id="search" name="search" placeholder="Search...">
+      <button type="submit">Search</button>
+    </form>
+  </section> -->
+
+  <p>
+    Here, you can input a coin ticker, and we will calculate a trustworthiness rating based on how likely we think this coin is to be a rug-pull scheme. <br>
+    We determine this from insights into activity on Twitter/X, and also from the quantitative information on the coin. 
+  </p>
+
+  <div class="search-wrapper">
+    <div class="search-container">
+      <input type="text" name="searchInput" id="search-input" placeholder="Search...">
+      <button id="search-btn">🔍</button>
+    </div>
+  </div>
+
+  <div class="search-results-wrapper">
+  <div id="resultsBox" class = "search-results-box">
+      <div id="coin-graphic"></div>
+  </div>
+  </div>
+
+  <footer>
+    <p>&copy; JAB. Inc</p>
+  </footer>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("search-input");
+        const searchButton = document.getElementById("search-btn");
+        const searchResults = document.getElementById("search-results");
+        const coinDataDiv = document.getElementById("coin-data");
+
+        searchButton.addEventListener("click", function () {
+            const searchQuery = searchInput.value.trim();
+            if (!searchQuery) {
+                console.log("Search input is empty.");
+                return;
+            }
+  
+            fetch("http://localhost:5500/save-search", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ search: searchQuery }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                searchResults.innerHTML = `<p>Search saved: ${searchQuery}</p>`;
+            })
+            .catch(error => console.error("Error saving search:", error));
+        });
+  
+        function createTrustScoreGraphic(score) {
+          return `
+            <div class="trust-circle" style="background: conic-gradient(#4caf50 ${score * 3.6}deg, #230052 0deg)">
+                <span class="trust-score">${score}%</span>
+            </div>`;
+}
+
+function fetchCoinData() {
+    fetch("http://localhost:5500/coins")
+        .then(response => response.json())
+        .then(data => {
+            const coinDataDiv = document.getElementById("coin-graphic");
+            coinDataDiv.innerHTML = ""; // Clear previous results
+            data.forEach(coin => {
+                coinDataDiv.innerHTML += `
+                    <div class = "coin-item">
+                    ${createTrustScoreGraphic(coin.trustScore)}
+                    <p style="font-size: 35px;"><strong>${coin.name}</strong> (${coin.symbol})</p>
+                    <img class="coin-logo" src="${coin.image}" alt="${coin.name} Logo"
+                    </div>
+                `;
+            });
+        })
+        .catch(error => console.error("Error fetching coin data:", error));
+      }
+
+        fetchCoinData(); // Load coin data on page load
+    });
+</script>
+
+</body>
+</html>

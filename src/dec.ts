@@ -4,8 +4,15 @@ import fetch from "node-fetch";
 import * as fs from "fs";  
 import path from "path"; 
 
+// if (fs.existsSync('src/data/metadata.json')) {fs.unlinkSync('src/data/metadata.json');}
+
 const jsonString = process.argv[2];
-const tokenMint = new PublicKey(jsonString);
+let tokenMint;
+try {
+  tokenMint = new PublicKey(jsonString);
+} catch (error) {
+  throw new Error("invalid key"); // empty address
+}
 const programId = new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s");
 const seeds = [Buffer.from("metadata"), programId.toBytes(), tokenMint.toBytes()];
 
@@ -62,10 +69,13 @@ async function fetchMetadata() {
     const metadataObject = {
       name: name || null,
       symbol: symbol || null,
-      twitter: twitter,
+      image: "data/logo.png",
+      twitter: twitter
     };
 
-    fs.writeFileSync('src/data/metadata.json', JSON.stringify(metadataObject, null, 2));
+    const metadataArray = [metadataObject];
+
+    fs.writeFileSync('src/data/metadata.json', JSON.stringify(metadataArray, null, 2));
 
   } catch (error) {
     console.error("Error fetching account information or processing metadata:", error);
@@ -83,7 +93,7 @@ async function downloadImage(url) {
     if (!fs.existsSync('src/data')) {
       fs.mkdirSync('src/data', { recursive: true });
     }
-    fs.writeFileSync('src/data/icon.jpg', imageBuffer);
+    fs.writeFileSync('frontend/data/logo.png', imageBuffer);
   } catch (error) {
     console.error("Error downloading image:", error);
   }
