@@ -88,7 +88,6 @@ async function downloadImage(url) {
     if (!imageResponse.ok) {
       throw new Error("Failed to fetch image.");
     }
-    console.log(2);
     const imageBuffer = await imageResponse.buffer();
     fs.writeFileSync('frontend/data/logo.png', imageBuffer);
   } catch (error) {

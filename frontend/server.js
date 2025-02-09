@@ -29,12 +29,8 @@ app.post("/save-search", (req, res) => {
             }
             res.json({ message: "Search saved!", searches });
         });
-
+        // Load coin with metadata file
         const pythonProcess = spawn('python', ['src/main.py']).on('close', () => {
-            // if (fs.existsSync("src/data/metadata.json")) {
-            // console.log("Metadata file found. Proceeding with the server setup...");
-            // res.redirect("/coins");
-            // res.end();
             app.get("/coins", (req, res) => {
                 fs.readFile("src/data/metadata.json", "utf8", (err, data) => {
                     if (err) {
@@ -47,7 +43,6 @@ app.post("/save-search", (req, res) => {
         pythonProcess.stdout.on('data', (data) => {
             console.log(`stdout: ${data.toString()}`);
         });
-        console.log(1);
         
     });
 });

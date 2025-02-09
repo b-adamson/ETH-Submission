@@ -69,6 +69,7 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as e:
+        # if typescript throws, give default coin metadata for error
         error_data = {
             "name": str(e),
             "symbol": "none",
