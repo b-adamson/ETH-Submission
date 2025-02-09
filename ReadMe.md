@@ -1,6 +1,7 @@
 RugRadar:
 
 Uses a random forest LLM to analyse memecoin history in terms of past price and google search analytics of the coin ticker code (e.g. $USDC)
+If its about to be rugpulled closer to 100, if stable closer to 0
 
 Build instructions:
 
