@@ -1,4 +1,8 @@
-RugRadar:
+RugPullRadar:
+
+Billy Adamson
+Artharv Gupta
+Julian Huddart
 
 Uses a random forest LLM to analyse memecoin history in terms of past price and google search analytics of the coin ticker code (e.g. $USDC)
 If its about to be rugpulled closer to 100, if stable closer to 0
@@ -27,6 +31,7 @@ EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
 BvSyXBvy76mUgzLSbvvT4NQw5rSM4P5zAsdnvqUJpump
 SsKFgDPEqyzAM8nWPiiX7MGY7iNDTEX6DxRdxmkpump
 
+Use solscan or explorer.solana to find mint addresses of popular solana coins
 
 These include trump coin, melania coin, usdc
 
@@ -41,3 +46,5 @@ TRUMP = 0.28
 USDT = 0.01
 
 Not bad!
+
+plotcsv.py plots a csv of data extracted from the ML model, is optional and doesn't run on its own
